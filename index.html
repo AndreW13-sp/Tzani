@@ -9,24 +9,15 @@
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
     </head>
     <body class="bg-white">
-        <nav class="z-50">
+        <nav class="z-50 relative">
             <div class="bg-transparent absolute top-0 left-0 right-0 z-10">
-                <div class="container mx-auto px-4 lg:pr-0 flex justify-between items-center">
-                    <img src="imgs/logo1.png" alt="Company Logo" class=" h-16 md:h-20 pt-8 sticky top-0" id="mainLogo">
+                <div class="container mx-4 px-4 lg:pr-0 flex justify-between items-center">
+                    <img src="imgs/logo1.png" alt="Company Logo" class="h-16 md:h-20 pt-8" id="mainLogo">
                 </div>
             </div>
-            <div id="scrollNav" class="bg-transparent fixed top-0 left-0 right-0 z-50 hidden-nav">
+            <div id="scrollNav" class="bg-transparent fixed top-0 left-0 right-0 z-50 hidden-nav lg:hidden-nav lg:flex">
                 <div class="container mx-auto flex justify-between items-center">
-                    <img src="imgs/logo.png" alt="Company Logo" class="h-10 pl-4 pt-4 lg:h-12 sticky top-0">
-                    <button id="toggleNavBtn" class="text-black block lg:hidden focus:outline-none">
-                        <svg class="h-12 pt-4 w-12 fill-current transition duration-300 ease-in-out" id="toggleIcon">
-                            <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="hamburger" />
-                            <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="close hidden" />
-                        </svg>
-        
-                    </button>
+                    <img src="imgs/logo.png" alt="Company Logo" class="h-10 pl-4 pt-4 lg:h-12">
                     <ul id="navLinks" class="hidden lg:flex ml-auto">
                         <li><a href="#inspiration"
                                 class="nav-link block text-white font-bold bg-black bg-opacity-100 text-xl p-4">Inspiration</a>
@@ -34,12 +25,31 @@
                         <li><a href="products.html"
                                 class="nav-link block text-black font-bold bg-gray-300 bg-opacity-100 text-xl p-4">Products</a>
                         </li>
-                        <li><a href="#resources"
-                                class="nav-link block text-black font-bold bg-white bg-opacity-100 text-xl p-4">Technical
+                        <li><a href="#resources" class="nav-link block text-black font-bold bg-white bg-opacity-100 text-xl p-4">Technical
                                 Resources</a></li>
                         <li><a href="#about" class="nav-link block text-black font-bold bg-white bg-opacity-100 text-xl p-4">We
                                 are Deltalight</a></li>
                     </ul>
+                    <button id="toggleNavBtn" class="text-black block lg:hidden focus:outline-none">
+                        <svg class="h-12 pt-4 w-12 fill-current transition duration-300 ease-in-out" id="toggleIcon">
+                            <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="hamburger" />
+                            <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="close hidden text-white" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="navOverlay" class="fixed inset-0 bg-black bg-opacity-75 z-40 hidden lg:hidden">
+                <div class="flex flex-col h-full justify-between">
+                    <div class="flex-1 flex flex-col justify-center items-center">
+                        <ul class="flex flex-col items-center space-y-8">
+                            <li><a href="#inspiration" class="text-white text-3xl font-bold">Inspiration</a></li>
+                            <li><a href="products.html" class="text-white text-3xl font-bold">Products</a></li>
+                            <li><a href="#resources" class="text-white text-3xl font-bold">Technical Resources</a></li>
+                            <li><a href="#about" class="text-white text-3xl font-bold">We are Deltalight</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -47,47 +57,38 @@
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const scrollNav = document.getElementById("scrollNav");
-                const servicesSection = document.getElementById("services");
-                const toggleIcon = document.getElementById("toggleIcon");
+                const homeSection = document.getElementById("home");
+                const toggleNavBtn = document.getElementById('toggleNavBtn');
+                const navOverlay = document.getElementById('navOverlay');
+                const toggleIcon = document.getElementById('toggleIcon');
                 const hamburgerPath = toggleIcon.querySelector('.hamburger');
                 const closePath = toggleIcon.querySelector('.close');
-                const toggleNavBtn = document.getElementById('toggleNavBtn');
-                const closeNavBtn = document.getElementById('closeNavBtn');
                 let open = false;
 
                 closePath.classList.add('hidden');
 
-                window.addEventListener("scroll", function () {
-                    const servicesSectionTop = servicesSection.getBoundingClientRect().top;
-                    if (servicesSectionTop <= 0) {
-                        if (!scrollNav.classList.contains("slide-in-top")) {
-                            scrollNav.classList.remove("hidden-nav");
-                            scrollNav.classList.add("slide-in-top");
-                        }
+                function checkScrollPosition() {
+                    const scrollPosition = window.scrollY;
+                    const homeSectionRect = homeSection.getBoundingClientRect();
+                    const homeSectionVisible = homeSectionRect.top <= window.innerHeight && homeSectionRect.bottom >= 0;
+
+                    if (scrollPosition === 0 || homeSectionVisible) {
+                        scrollNav.style.display = 'none'; 
                     } else {
-                        scrollNav.classList.add("hidden-nav");
-                        scrollNav.classList.remove("slide-in-top");
+                        scrollNav.style.display = 'flex'; 
                     }
-                });
+                }
+
+                window.addEventListener("scroll", checkScrollPosition);
 
                 toggleNavBtn.addEventListener('click', function () {
-                    const navLinks = document.getElementById('navLinks');
-                    navLinks.classList.toggle('hidden');
+                    navOverlay.classList.toggle('hidden');
                     open = !open;
                     hamburgerPath.classList.toggle('hidden', open);
                     closePath.classList.toggle('hidden', !open);
-                    closeNavBtn.classList.toggle('hidden', !open);
                 });
 
-                closeNavBtn.addEventListener('click', function () {
-                    const navLinks = document.getElementById('navLinks');
-                    navLinks.classList.add('hidden');
-                    open = false;
-                    hamburgerPath.classList.remove('hidden');
-                    closePath.classList.add('hidden');
-                    closeNavBtn.classList.add('hidden');
-                    toggleNavBtn.classList.remove('hidden');
-                });
+                checkScrollPosition();
             });
         </script>
 
