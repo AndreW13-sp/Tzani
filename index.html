@@ -45,10 +45,10 @@
                     <div class="flex-1 flex flex-col justify-center items-center w-full">
                         <ul class="flex flex-col items-center w-full">
                             <li class="w-full"><a href="#inspiration"
-                                    class="block text-3xl text-white font-bold bg-black bg-opacity-100 p-4 pt-20 w-full">Inspiration</a>
+                                    class="block text-3xl text-white font-bold bg-black bg-opacity-100 p-4 pt-36 w-full">Inspiration</a>
                             </li>
                             <li class="w-full"><a href="products.html"
-                                    class="block text-black font-bold bg-gray-300 bg-opacity-100 text-3xl p-4 pt-16 w-full">Products</a>
+                                    class="block text-black font-bold bg-gray-300 bg-opacity-100 text-3xl p-4 pt-24 w-full">Products</a>
                             </li>
                             <li class="w-full"><a href="#resources"
                                     class="block text-black font-bold bg-white bg-opacity-100 text-3xl p-4 pt-16 w-full">Technical
@@ -60,7 +60,6 @@
                     </div>
                 </div>
             </div>
-
         </nav>
         
         <script>
@@ -72,6 +71,7 @@
                 const toggleIcon = document.getElementById('toggleIcon');
                 const hamburgerPath = toggleIcon.querySelector('.hamburger');
                 const closePath = toggleIcon.querySelector('.close');
+                const mainLogo = document.getElementById('mainLogo');
                 let open = false;
 
                 closePath.classList.add('hidden');
@@ -81,10 +81,15 @@
                     const homeSectionRect = homeSection.getBoundingClientRect();
                     const homeSectionVisible = homeSectionRect.top <= window.innerHeight && homeSectionRect.bottom >= 0;
 
-                    if (scrollPosition === 0 || homeSectionVisible) {
-                        scrollNav.style.display = 'none'; 
+                    if (open) {
+                        scrollNav.style.display = 'flex';
+                        mainLogo.style.display = 'block'; // Ensure main logo is always visible when navigation is open
+                    } else if (scrollPosition === 0 || homeSectionVisible) {
+                        scrollNav.style.display = 'none';
+                        mainLogo.style.display = 'block'; // Ensure main logo is visible when at the top of the page or in the home section
                     } else {
-                        scrollNav.style.display = 'flex'; 
+                        scrollNav.style.display = 'flex';
+                        mainLogo.style.display = 'none'; // Hide main logo when scrolling and navigation is closed
                     }
                 }
 
@@ -95,6 +100,7 @@
                     open = !open;
                     hamburgerPath.classList.toggle('hidden', open);
                     closePath.classList.toggle('hidden', !open);
+                    mainLogo.style.display = open ? 'block' : 'none'; // Toggle main logo visibility based on nav state
                 });
 
                 checkScrollPosition();
